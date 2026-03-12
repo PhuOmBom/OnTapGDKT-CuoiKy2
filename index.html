@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn tập GDKT & PL 12 - Giữa Kỳ 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1565C0;
+            /* Blue 800 */
+            --primary-light: #42A5F5;
+            /* Blue 400 */
+            --primary-dark: #0D47A1;
+            --accent-color: #90CAF9;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --text-secondary: #666;
+            --correct-color: #d4edda;
+            --correct-text: #155724;
+            --wrong-color: #f8d7da;
+            --wrong-text: #721c24;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            font-weight: 300;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary-light);
+        }
+
+        .info-card h3 {
+            margin-top: 0;
+            color: var(--primary-dark);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-light);
+            transition: width 0.3s ease;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-text {
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        @media (min-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            padding: 12px 15px;
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1rem;
+            position: relative;
+            user-select: none;
+        }
+
+        .option-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary-light);
+            background: #e8f5e9;
+        }
+
+        .option-btn.correct {
+            background: var(--correct-color);
+            color: var(--correct-text);
+            border-color: var(--correct-text);
+        }
+
+        .option-btn.incorrect {
+            background: var(--wrong-color);
+            color: var(--wrong-text);
+            border-color: var(--wrong-text);
+        }
+
+        /* Part 2 specific */
+        .tf-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tf-row:last-child {
+            border-bottom: none;
+        }
+
+        .tf-statement {
+            flex: 1;
+            padding-right: 15px;
+        }
+
+        .tf-options {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tf-btn {
+            padding: 5px 15px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            min-width: 60px;
+        }
+
+        .tf-btn.selected-true {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .tf-btn.selected-false {
+            background: #ef5350;
+            color: white;
+            border-color: #c62828;
+        }
+
+        .tf-result {
+            font-weight: bold;
+            margin-left: 10px;
+            min-width: 30px;
+        }
+
+        .correct-text {
+            color: var(--primary-dark);
+        }
+
+        .wrong-text {
+            color: #d32f2f;
+        }
+
+        .explanation {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* Toast */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+        }
+
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        /* Feedback Overlay */
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .feedback-overlay.active {
+            display: flex;
+        }
+
+        .feedback-img {
+            max-width: 80%;
+            max-height: 80%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.1s ease-out;
+        }
+
+        .feedback-img.show {
+            opacity: 1;
+            transform: scale(1);
+            animation: fadeOutEffect 0.36s forwards;
+        }
+
+        /* For finished state, we might want different behavior */
+        .feedback-overlay.finished .feedback-img {
+            animation: none;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @keyframes fadeOutEffect {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Ôn tập GDKT & PL 12</h1>
+            <p>Học kỳ 2 - Giữa kỳ</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('part1')">Phần I: Trắc Nghiệm</button>
+            <button class="tab-btn" onclick="openTab('part2')">Phần II: Đúng/Sai</button>
+        </div>
+
+        <div id="part1" class="tab-content active">
+            <div class="info-card">
+                <h3>Phần I: Trắc nghiệm nhiều lựa chọn</h3>
+                <p>Chọn phương án đúng nhất cho mỗi câu hỏi.</p>
+                <div class="progress-bar">
+                    <div id="progress-part1" class="progress" style="width: 0%"></div>
+                </div>
+                <p class="score">Đúng: <span id="score-part1">0</span> / <span id="total-part1">0</span></p>
+            </div>
+            <div id="questions-part1" class="questions-list"></div>
+        </div>
+
+        <div id="part2" class="tab-content">
+            <div class="info-card">
+                <h3>Phần II: Trắc nghiệm Đúng/Sai</h3>
+                <p>Chọn Đúng hoặc Sai cho mỗi ý a, b, c, d.</p>
+                <div class="progress-bar">
+                    <div id="progress-part2" class="progress" style="width: 0%"></div>
+                </div>
+                <p class="score">Điểm: <span id="score-part2">0</span> / <span id="total-part2">0</span></p>
+            </div>
+            <div id="questions-part2" class="questions-list"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="feedback-overlay" class="feedback-overlay">
+        <img id="feedback-img" class="feedback-img" src="" alt="Feedback">
+    </div>
+
+    <script>
+        const part1Data = [
+            {
+                "id": 1,
+                "q": "Khoản 4 Điều 70 Luật Hôn nhân và gia đình năm 2014 quy định “Con đã thành niên có quyền tự do lựa chọn nghề nghiệp, nơi cư trú, học tập,.... theo nguyện vọng và khả năng của mình”. Quy định này nói về bình đẳng trong quan hệ nào dưới đây?",
+                "opts": [
+                    "A. Giữa các thế hệ.",
+                    "B. Giữa các thành viên.",
+                    "C. Giữa người lớn và trẻ em.",
+                    "D. Giữa cha mẹ và con."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 2,
+                "q": "Một trong những nội dung của quyền bình đẳng trong hôn nhân và gia đình được thể hiện ở việc đối với các cháu, ông, bà cần",
+                "opts": [
+                    "A. bác bỏ quyền tự do tôn giáo.",
+                    "B. áp đặt quan điểm cá nhân",
+                    "C. sống mẫu mực và nêu gương.",
+                    "D. che dấu hành vi bạo lực. ."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 3,
+                "q": "Trong thời gian chờ quyết định li hôn của Tòa án, chị A nhận được tin đồn anh B chồng chị đang tổ chức tiệc cưới với chị H tại nhà hàng X. Vốn đã nghi ngờ từ trước, chị A cùng con rể đến nhà hàng, bắt gặp anh B đang liên hoan vui vẻ với các đồng nghiệp, hai mẹ con lao vào sỉ nhục anh thậm tệ. Những ai dưới đây vi phạm quyền và nghĩa vụ của công dân trong gia đình?",
+                "opts": [
+                    "A. Chị A, anh B, con rể và chị H.",
+                    "B. Chị A, anh B và con rể.",
+                    "C. Chị A, anh B và chị H.",
+                    "D. Chị A và con rể."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 4,
+                "q": "Một trong những nội dung của quyền bình đẳng trong hôn nhân và gia đình là vợ, chồng có quyền và nghĩa vụ ngang nhau trong việc",
+                "opts": [
+                    "A. định đoạt tài sản công cộng",
+                    "B. lựa chọn việc làm phù hợp.",
+                    "C. mở rộng quy mô sản xuất.",
+                    "D. đề xuất mức lương khởi điểm."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 5,
+                "q": "Theo quy của pháp luật, vợ chồng phải có trách nhiệm tôn trọng giữ gìn, danh dự, nhân phẩm, uy tín của nhau là thể hiện quyền bình đẳng giữa vợ và chồng trong quan hệ",
+                "opts": [
+                    "A. nhân thân.",
+                    "B. việc làm.",
+                    "C. tài sản.",
+                    "D. chỗ ở."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 6,
+                "q": "Theo quy định của pháp luật, quyền và nghĩa vụ của công dân trong hôn nhân gia đình thể hiện mọi công dân phải tuân thủ nguyên tắc",
+                "opts": [
+                    "A. một vợ một chồng.",
+                    "B. nhiều vợ, nhiều chồng.",
+                    "C. một vợ nhiều chồng.",
+                    "D. một chồng nhiều vợ."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 7,
+                "q": "Theo quy định của pháp luật, trong hôn nhân và gia đình, vợ và chồng có quyền và nghĩa vụ ngang nhau trong việc",
+                "opts": [
+                    "A. áp đặt quan điểm cá nhân.",
+                    "B. chiếm hữu tài sản công cộng.",
+                    "C. tôn trọng danh dự của nhau.",
+                    "D. che giấu hành vi bạo lực."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 8,
+                "q": "Một trong những nội dung về mối quan hệ giữa các thành viên trong gia đình là đối với các con, cha mẹ không được",
+                "opts": [
+                    "A. tư vấn hướng nghiệp.",
+                    "B. chăm sóc, đỡ đầu.",
+                    "C. ngược đãi, xúc phạm.",
+                    "D. giám hộ, bảo lãnh."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 9,
+                "q": "Theo quy định của pháp luật, trong hôn nhân và gia đình, vợ và chồng có trách nhiệm",
+                "opts": [
+                    "A. Tạo điều kiện cho nhau cùng phát triển",
+                    "B. tổ chức bán xăng giả.",
+                    "C. tạo lập bằng chứng ngoại phạm.",
+                    "D. thay đổi hiện trường gây án."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 10,
+                "q": "Theo quy định của pháp luật, việc dùng tài sản chung để đầu tư kinh doanh khi có sự bàn bạc, thỏa thuận giữa vợ và chồng thể hiện nội dung quyền bình đẳng giữa vợ và chồng trong quan hệ",
+                "opts": [
+                    "A. tài sản.",
+                    "B. giám hộ.",
+                    "C. nhân thân.",
+                    "D. giao dịch."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 11,
+                "q": "Theo quy định của pháp luật, trong hôn nhân và gia đình, vợ và chồng bình đẳng với nhau trong việc",
+                "opts": [
+                    "A. chế tạo trái phép vũ khí quân dụng.",
+                    "B. làm giả hồ sơ bảo hiểm.",
+                    "C. thống nhất địa điểm cư trú.",
+                    "D. tài trợ hoạt động khủng bố."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 12,
+                "q": "Theo quy định của pháp luật, nội dung nào dưới đây không thể hiện quyền bình đẳng giữa vợ và chồng về quyền và nghĩa vụ?",
+                "opts": [
+                    "A. Định đoạt khối tài sản chung.",
+                    "B. Lựa chọn nơi cư trú.",
+                    "C. Giúp đỡ nhau cùng phát triển",
+                    "D. Che giấu hành vi bạo lực"
+                ],
+                "a": "D"
+            },
+            {
+                "id": 13,
+                "q": "Theo luật Hôn nhân và gia đình thì con có thể tự quản lí tài sản riêng của mình hoặc nhờ cha mẹ quản lí khi đủ bao nhiêu trở lên?",
+                "opts": [
+                    "A. 16 tuổi.",
+                    "B. 18 tuổi.",
+                    "C. 15 tuổi.",
+                    "D. 17 tuổi."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 14,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Trong thông tin trên, những ai đã vi phạm quyền và nghĩa vụ của công dân trong hôn nhân và gia đình?",
+                "opts": [
+                    "A. Anh D, anh M và chị H.",
+                    "B. Chị H, anh T và chị Y.",
+                    "C. Chị H và anh T.",
+                    "D. Anh D và chị H."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 15,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Anh T và chị H cùng vi phạm nội dung nào dưới đây của quyền và nghĩa vụ của vợ và chồng trong hôn nhân và gia đình?",
+                "opts": [
+                    "A. Quyền kết hôn.",
+                    "B. Quyền ly hôn.",
+                    "C. Quyền nhân thân.",
+                    "D. Quyền tài sản."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 16,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Mọi công dân không phân biệt dân tộc, tôn giáo, tín ngưỡng, giới tính, đặc điểm cá nhân, nguồn gốc gia đình, địa vị xã hội, hoàn cảnh kinh tế là thể hiện nội dung nào trong quyền học tập của công dân?",
+                "opts": [
+                    "A. Quyền học bất cứ ngành nghề nào.",
+                    "B. Quyền bình đẳng về cơ hội học tập.",
+                    "C. Quyền học thường xuyên, học suốt đời.",
+                    "D. Quyền học không hạn chế."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 17,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Phát biểu nào dưới đây là sai về quyền học tập của công dân?",
+                "opts": [
+                    "A. Học thường xuyên, học suốt đời là quyền của mỗi công dân",
+                    "B. Nếu đủ điều kiện công dân có quyền học bất cứ ngành, nghề nào.",
+                    "C. Quyền học tập khi có sự đồng ý của các cơ quan có thẩm quyền.",
+                    "D. Mọi công dân có đều có quyền học tập không hạn chế."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 18,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Nội dung nào dưới đây không thể hiện quyền công dân trong học tập?",
+                "opts": [
+                    "A. Học bất cứ ngành, nghề nào phù hợp.",
+                    "B. Học từ thấp đến cao.",
+                    "C. Học bằng nhiều hình thức khác nhau.",
+                    "D. Học theo sự ủy quyền."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 19,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Công dân được lựa chọn học những ngành nghề phù hợp với khả năng và điều kiện của mình là thể hiện nội dung nào dưới đây của quyền học tập ?",
+                "opts": [
+                    "A. Được hưởng đời sống tinh thần.",
+                    "B. Tư vấn nghề nghiệp miễn phí.",
+                    "C. Học bất cứ ngành nghề nào.",
+                    "D. Sáng tạo không giới hạn."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 20,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Hành vi nào dưới đây vi phạm quyền và nghĩa vụ học tập của công dân",
+                "opts": [
+                    "A. Học sinh tham gia các hoạt động nghệ thuật do nhà trường tổ chức.",
+                    "B. Sinh viên đủ tiêu chuẩn được nhận vào học đúng ngành đăng kí.",
+                    "C. Trong thời gian dịch bệnh sinh viên được nghỉ học tạm thời theo quy định.",
+                    "D. Cha mẹ ngăn cấm con tham gia các hoạt động tập thể của trường lớp."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 21,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Công dân có thể học ở hệ chính quy hoặc giáo dục thường xuyên, học ban ngày hoặc buổi tối là nội dung quyền",
+                "opts": [
+                    "A. bình đẳng về cơ hội.",
+                    "B. học bất cứ ngành nghề nào.",
+                    "C. học không hạn chế.",
+                    "D. học thường xuyên, học suốt đời."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 22,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Khi thực hiện quyền học tập của mình, công dân có nghĩa vụ",
+                "opts": [
+                    "A. học thường xuyên, suốt đời.",
+                    "B. từ chối đóng học phí.",
+                    "C. tôn trọng nội quy trường lớp.",
+                    "D. học vượt cấp, vượt lớp."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 23,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Hoạt động nào dưới đây không phải là quyền học tập của công dân?",
+                "opts": [
+                    "A. Trường trung học phổ thông E đã thực hiện hoạt động “Hòm thư góp ý\" nhằm giúp học sinh tham gia xây dựng trường lớp.",
+                    "B. Trường trung học phổ thông A đã trao học bổng cho các em học sinh có hoàn cảnh khó khăn.",
+                    "C. Công đoàn trường trung học phổ thông N tổ chức cuộc thi “Dạy tốt – Học tốt\"",
+                    "D. Đoàn Thanh niên trường trung học phổ thông M đã tổ chức hoạt động tu vấn sức khoẻ, tâm lí cho học sinh."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 24,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Nội dung nào dưới đây không thể hiện quyền và nghĩa vụ học tập của công dân?",
+                "opts": [
+                    "A. Công dân được cung cấp đầy đủ các thông tin trong quá trình học tập.",
+                    "B. Công dân tố cáo các hành vi vi phạm quyền học tập của công dân.",
+                    "C. Công dân được tôn trọng về nhân phẩm, danh dự trong học tập.",
+                    "D. Công dân được hưởng đời sống vật chất và tinh thần đầy đủ."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 25,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Theo quy định của pháp luật, một trong những nội dung của quyền học tập là mọi công dân đều được",
+                "opts": [
+                    "A. miễn, giảm học phí.",
+                    "B. học bằng nhiều hình thức.",
+                    "C. cộng điểm ưu tiên.",
+                    "D. đặc cách xét tốt nghiệp."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 26,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Công dân thực hiện quyền học thường xuyên, học suốt đời trong trường hợp nào sau đây?",
+                "opts": [
+                    "A. Bảo mật quan điểm cá nhân.",
+                    "B. Định kỳ bồi dưỡng chuyên môn.",
+                    "C. Bác bỏ giáo dục truyền thống.",
+                    "D. Từ chối hoạt động hướng nghiệp."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 27,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Công dân thực hiện đúng nghĩa vụ của mình trong học tập khi thực hiện tốt việc làm nào dưới đây?",
+                "opts": [
+                    "A. Từ chối nhập học đúng đối tượng.",
+                    "B. Xúc phạm nhân phẩm người dạy.",
+                    "C. Tố cáo hành vi tiêu cực trong học tập.",
+                    "D. Khiếu nại quyền lợi học tập của mình."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 28,
+                "q": "Anh D và chị H vay của anh M em trai chị H số tiền 300 triệu đồng để kinh doanh nhưng bị thua lỗ. Sau nhiều lần đề nghị anh chị trả nợ không được. Anh M yêu cầu anh D đến làm bảo vệ cho mình tại một xưởng sản xuất để trừ nợ dần và được anh D đồng ý. Trong thời gian này, vì đang nuôi con nhỏ, chị H vừa trông con vừa bán hàng qua mạng. Do công việc kinh doanh, giữa chị H và anh T thường xuyên qua lại trao đổi, sau đó giữa hai người nảy sinh tình cảm yêu đương. Trong một lần hai mẹ con chị H tới thăm anh D, do điện thoại hết pin, chị V vợ anh M có mượn điện thoại chị H để trao đổi công việc, vô tình thấy những tin nhắn tình cảm qua lại giữa chị H và anh T nên đã bí mật sao chép. Do mâu thuẫn vì trước đây chị H thường nói xấu chị V trước mặt mẹ chồng nên chị V đã dùng tin nhắn nặc danh gửi những hình ảnh chứa nội dung tin nhắn giữa anh T và chị H cho chị Y vợ anh T, khiến chị Y viết đơn đòi ly hôn.<br><br><br>Chính sách miễn giảm học phí của Nhà nước ta đã tạo điều kiện giúp đỡ nhiều học sinh có hoàn cảnh khó khăn được học tập góp phần tạo điều kiện để công dân thực hiện quyền học tập ở nội dung nào dưới đây?",
+                "opts": [
+                    "A. Chủ trương phát triển giáo dục.",
+                    "B. Định hướng đổi mới giáo dục.",
+                    "C. Bất bình đẳng trong giáo dục.",
+                    "D. Công bằng xã hội trong giáo dục."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 29,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Thông tin trên cho biết những chủ thể nào dưới đây đã thực hiện quyền học tập không hạn chế?",
+                "opts": [
+                    "A. K và P.",
+                    "B. K, P và M.",
+                    "C. X và M.",
+                    "D. X, M và P"
+                ],
+                "a": "A"
+            },
+            {
+                "id": 30,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Để thực hiện quyền học tập của mình, anh X và anh M đã lựa chọn hình thức học tập nào dưới đây?",
+                "opts": [
+                    "A. Học thường xuyên, suốt đời.",
+                    "B. Học tập không hạn chế.",
+                    "C. Bình đẳng về cơ hội học tập.",
+                    "D. Nhận hỗ trợ trong học tập. sinh xã hội"
+                ],
+                "a": "A"
+            },
+            {
+                "id": 31,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Theo quy định của pháp luật, trong việc bảo đảm an sinh xã hội, mọi công dân đều được tạo điều kiện để",
+                "opts": [
+                    "A. miễn phí dịch vụ.",
+                    "B. hưởng mọi phụ cấp.",
+                    "C. trợ cấp ưu đãi.",
+                    "D. tìm kiếm việc làm."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 32,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Trong công tác bảo vệ và chăm sóc sức khỏe, công dân có quyền được",
+                "opts": [
+                    "A. xúc phạm cán bộ y tế.",
+                    "B. miễn phí mọi dịch vụ.",
+                    "C. làm những gì mình thích.",
+                    "D. đối xử bình đẳng."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 33,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Theo quy định của pháp luật, trong việc bảo đảm an sinh xã hội, mọi công dân đều được tạo điều kiện để",
+                "opts": [
+                    "A. hỗ trợ một dịch vụ xã hội.",
+                    "B. hưởng mọi dịch vụ xã hội.",
+                    "C. đáp ứng các dịch vụ xã hội.",
+                    "D. tiếp cận các dịch vụ xã hội."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 34,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Nội dung nào dưới đây không thể hiện quyền được bảo đảm an sinh xã hội của công dân?",
+                "opts": [
+                    "A. Bảo đảm nhu cầu sinh hoạt.",
+                    "B. Tiếp cận các thông tin y tế.",
+                    "C. Hỗ trợ việc làm, thu nhập.",
+                    "D. Hưởng các trợ cấp xã hội."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 35,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Việc người lao động tham gia và được hưởng chế độ bảo hiểm thất nghiệp theo quy định là đã thực hiện quyền của công dân ở nội dung nào dưới đây?",
+                "opts": [
+                    "A. Kinh doanh và đóng thuế.",
+                    "B. Chăm sóc bảo vệ sức khỏe.",
+                    "C. Học tập thường xuyên",
+                    "D. Bảo đảm an sinh xã hội."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 36,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Quyền được tiếp cận và duy trì những lợi ích bằng tiền mặt hoặc bằng hiện vật không có sự phân biệt đối xử nào, để bảo vệ con người chối các hoàn cảnh khó khăn như thất nghiệp, bệnh tật, tuổi già,... là nội dung của quyền nào dưới đây?",
+                "opts": [
+                    "A. Quyền được làm việc.",
+                    "B. Quyền được bảo vệ, chăm sóc sức khoẻ.",
+                    "C. Quyền được đảm bảo an sinh xã hội.",
+                    "D. Quyền bình đẳng."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 37,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Nội dung nào dưới đây không thể hiện quyền được đảm bảo an sinh xã hội của công dân",
+                "opts": [
+                    "A. Tham gia bảo hiểm thất nghiệp.",
+                    "B. Đảm bảo nước sạch trong sinh hoạt.",
+                    "C. Đóng góp ý kiến Luật bảo hiểm.",
+                    "D. Hỗ trợ vay vốn để chăn nuôi."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 38,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Nội dung nào dưới đây không thể hiện quyền được bảo vệ, chăm sóc sức khoẻ của công dân?",
+                "opts": [
+                    "A. Bảo đảm môi trường sống tốt.",
+                    "B. Bí mật thông tin cá nhân.",
+                    "C. Hưởng chế độ trợ cấp thất nghiệp.",
+                    "D. Khám, chữa bệnh theo yêu cầu."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 39,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Công dân vi phạm quyền được bảo vệ và chăm sóc sức khỏe của người khác khi có hành vi",
+                "opts": [
+                    "A. công khai hồ sơ bệnh lý.",
+                    "B. hỗ trợ công tác khám bệnh.",
+                    "C. tư vấn sử dụng dịch vụ y tế.",
+                    "D. tư vấn rủi ro khi chữa bệnh."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 40,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Theo quy định của pháp luật, nội dung nào dưới đây thể hiện nghĩa vụ của công dân trong đảm bảo an sinh xã hội?",
+                "opts": [
+                    "A. Thực hiện đầy đủ nghĩa vụ thuế.",
+                    "B. Tôn trọng sở hữu tài sản người khác.",
+                    "C. Học tập để nâng cao trình độ.",
+                    "D. Kê khai trung thực hồ sơ bảo hiểm."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 41,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Hành vi nào dưới đây không thể hiện nghĩa vụ của công dân trong bảo vệ, chăm sóc sức khoẻ?",
+                "opts": [
+                    "A. Bà D là người cao tuổi nên không phải chờ khám theo thứ tự quy định.",
+                    "B. Bạn M tố cáo hành vi bán thuốc giả của cửa hàng thuốc",
+                    "A. ",
+                    "C. Ông H đã thực hiện các chỉ định của bác sĩ trong khám, chữa bệnh.",
+                    "D. Chị P đã trung thực trong khai báo tình trạng bệnh của bản thân."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 42,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Công dân vi phạm quyền được bảo vệ và chăm sóc sức khỏe của người khác khi có hành vi",
+                "opts": [
+                    "A. đối xử bình đẳng về chữa bệnh.",
+                    "B. thông tin về tình hình người bệnh.",
+                    "C. xuyên tạc bệnh lý để chuộc lợi.",
+                    "D. từ chối chữa bệnh ngoài y bạ."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 43,
+                "q": "Các bạn X, M, K và P cùng học lớp 12, nhưng gia đình của X và M nghèo nên hai bạn quyết định đi làm công nhân sau khi thi tốt nghiệp. Hai bạn K và P làm hồ sơ thi vào hai trường đại học có khả năng lấy điểm chuẩn khác nhau. K học giỏi và đều các môn nên chọn thi vào trường lấy điểm cao. P chọn thi vào trường lấy điểm chuẩn thấp để phù hợp sức học của mình. Kết quả K và P đều trúng tuyển vào trường mình chọn. Sau 3 năm làm công nhân, nhận thấy việc học tập nâng cao trình độ sẽ hỗ trợ tốt cho việc làm của bản thân, anh X và anh M đã đăng ký học lấy bằng đại học hệ vừa học vừa làm và đã đủ điều kiện tham gia học tập.<br><br><br>Theo quy định của pháp luật, việc làm nào dưới đây không thể hiện quyền của công dân trong bảo đảm an sinh xã hội?",
+                "opts": [
+                    "A. Tham gia bảo hiểm tự nguyện.",
+                    "B. Quyết định hình thức hiến tạng.",
+                    "C. Tiếp cận các dịch vụ y tế.",
+                    "D. Tìm kiếm cơ hội việc làm."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 44,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Trong thông tin trên, Ủy ban nhân dân xã và Ngân hàng chính sách xã hội đã thực hiện tốt quyền và nghĩa vụ của công dân ở nội dung nào dưới đây?",
+                "opts": [
+                    "A. Quản lý vĩ mô nền kinh tế.",
+                    "B. Thực hiện chính sách tài khóa.",
+                    "C. Thực hiện chính sách tín dụng.",
+                    "D. Đảm bảo an sinh xã hội."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 45,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Việc làm nào dưới đây của anh S thể hiện quyền của công dân trong đảm bảo an sinh xã hội?",
+                "opts": [
+                    "A. Nộp hồ sơ xin trợ cấp học nghề.",
+                    "B. Tìm công việc để ổn định.",
+                    "C. Phục viên trở về địa phương.",
+                    "D. Thực hiện nghĩa vụ quân sự. nguyên thiên nhiên"
+                ],
+                "a": "A"
+            },
+            {
+                "id": 46,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Nội dung nào sau đây không thể hiện trách nhiệm của công dân trong việc tham gia bảo vệ di sản văn hóa?",
+                "opts": [
+                    "A. Tiếp thu tinh hoa văn hóa nhân loại.",
+                    "B. Chiếm lĩnh kiến thức khoa học kỹ thuật.",
+                    "C. Tham gia truyền đạo trái phép.",
+                    "D. Nâng cao trình độ học vấn."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 47,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Nội dung nào dưới đây thể hiện nghĩa vụ của công dân trong việc tham gia bảo vệ di sản văn hóa?",
+                "opts": [
+                    "A. Bảo vệ giá trị di sản.",
+                    "B. Tiếp cận giá trị di sản.",
+                    "C. Nghiên cứu giá trị di sản.",
+                    "D. Chuyển giao chủ sở hữu."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 48,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Nội dung nào dưới đây thể hiện nghĩa vụ của công dân trong việc tham gia bảo vệ di sản văn hóa?",
+                "opts": [
+                    "A. Tố cáo hành vi phá hoại di tích.",
+                    "B. Tuyên truyền bảo vệ di tích.",
+                    "C. Phục chế trò chơi dân gian.",
+                    "D. Nghiên cứu loại hình nghệ thuật."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 49,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Khi phát hiện hành vi xâm phạm di sản văn hóa trái pháp luật, việc làm nào dưới đây là phù hợp với nghĩa vụ của công dân trong bảo vệ di sản văn hóa?",
+                "opts": [
+                    "A. Tố cáo với cơ quan chức năng.",
+                    "B. Hợp tác để cùng thu lợi nhuận.",
+                    "C. Tham gia hỗ trợ để hưởng lợi.",
+                    "D. Yêu cầu chuyển quyền sở hữu."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 50,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Sao chép trái phép các di sản văn hóa vì mục đích vụ lợi là không thực hiện đúng quyền và nghĩa vụ của công dân về bảo vệ di sản văn hóa ở nội dung nào dưới đây?",
+                "opts": [
+                    "A. Trách nhiệm pháp lý.",
+                    "B. Nghĩa vụ.",
+                    "C. Quyền.",
+                    "D. Trách nhiệm kinh tế."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 51,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Nội dung nào sau đây không thể hiện trách nhiệm của công dân trong việc tham gia bảo vệ di sản văn hóa?",
+                "opts": [
+                    "A. Tôn tạo, nghiên cứu các di tích lịch sử",
+                    "B. Chiếm đoạt, làm sai lệch di sản văn hóa",
+                    "C. Bảo vệ và phát huy giá trị di sản văn hóa",
+                    "D. Khôi phục và giữ gìn các di sản văn hóa"
+                ],
+                "a": "B"
+            },
+            {
+                "id": 52,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Theo quy định của pháp luật, với các di sản văn hóa có giá trị và được pháp luật bảo vệ, công dân có nghĩa vụ",
+                "opts": [
+                    "A. phá bỏ và chiếm đoạt.",
+                    "B. bảo vệ và phát triển.",
+                    "C. tìm hiểu và phát huy.",
+                    "D. tôn tạo và làm mới."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 53,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Công dân lưu giữ và phát triển các loại hình nghệ thuật dân gian ở nước ta là đã thực hiện quyền và nghĩa vụ công dân ở nội dung nào dưới đây?",
+                "opts": [
+                    "A. Tôn trọng tài sản cá nhân.",
+                    "B. Học tập thường xuyên.",
+                    "C. Bảo vệ môi trường.",
+                    "D. Bảo vệ di sản văn hóa."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 54,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Theo quy định của pháp luật, với các di sản văn hóa được pháp luật bảo vệ, công dân không được",
+                "opts": [
+                    "A. tự ý thay đổi cấu trúc.",
+                    "B. hưởng thụ giá trị.",
+                    "C. nghiên cứu hình thức.",
+                    "D. tiếp cận nội dung."
+                ],
+                "a": "A"
+            },
+            {
+                "id": 55,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Theo quy định của pháp luật về di sản văn hóa, công dân không có quyền nào dưới đây?",
+                "opts": [
+                    "A. Nghiên cứu di sản văn hóa.",
+                    "B. Tiếp cận di sản văn hóa.",
+                    "C. Phục dựng lễ hội truyền thống.",
+                    "D. Hủy hoại di sản văn hóa."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 56,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Theo quy định của pháp luật, với các di sản văn hóa công cộng có giá trị và được pháp luật bảo vệ, công dân có quyền",
+                "opts": [
+                    "A. quản lý để phát triển du lịch cộng đồng.",
+                    "B. xác lập quyền sở hữu tài sản cá nhân.",
+                    "C. phá bỏ nếu không phù hợp với cá nhân.",
+                    "D. tiếp cận và hưởng thụ các giá trị di sản."
+                ],
+                "a": "D"
+            },
+            {
+                "id": 57,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Công dân tham gia tìm hiểu, nghiên cứu phong tục tập quán của các dân tộc là thực hiện đúng quyền và nghĩa vụ của công dân về bảo vệ di sản văn hóa ở nội dung nào dưới đây?",
+                "opts": [
+                    "A. Nghĩa vụ.",
+                    "B. Quyền.",
+                    "C. Trách nhiệm pháp lý.",
+                    "D. Trách nhiệm kinh tế."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 58,
+                "q": "Ngay sau khi hoàn thành nghĩa vụ quân sự và trở lại địa phương sinh sống anh S đã nộp hồ sơ xin trợ cấp học nghề gửi cơ quan nhà nước có thẩm quyền và được đồng ý. Khi hoàn thành quá trình học nghề với chuyên môn nhất định, anh S được Uỷ ban nhân dân xã A tạo điều kiện hỗ trợ để có thể mở xưởng sản xuất với quy mô nhỏ. Ngoài ra, anh còn được Ngân hàng chính sách xã hội tạo điều kiện cho vay vốn ưu đãi để xưởng sản xuất có thể đi vào hoạt động ổn định.<br><br><br>Hoạt động của các chủ thể thực hiện các biện pháp tích cực để gìn giữ giá trị di sản văn hoá trong cộng đồng và lưu truyền nó theo thời gian là nội dung của khái niệm nào dưới đây?",
+                "opts": [
+                    "A. Sử dụng di sản văn hoá.",
+                    "B. Chuyển giao di sản văn hoá.",
+                    "C. Bảo vệ di sản văn hoá.",
+                    "D. Tái tạo di sản văn hoá."
+                ],
+                "a": "C"
+            },
+            {
+                "id": 59,
+                "q": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br><br><br>Ông N đã thể hiện quyền của công dân trong bảo vệ di sản văn hóa ở nội dung nào dưới đây?",
+                "opts": [
+                    "A. Thay đổi nội dung cổ vật.",
+                    "B. Trao tặng cô vật có giá trị.",
+                    "C. Thu phí tham quan cổ vật.",
+                    "D. Giữ gìn giá trị các cổ vật."
+                ],
+                "a": "B"
+            },
+            {
+                "id": 60,
+                "q": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br><br><br>Nội dung nào dưới đây thể hiện nghĩa vụ của ông N trong việc tham gia bảo vệ di sản văn hóa?",
+                "opts": [
+                    "A. Trao tặng cổ vật cho bảo tàng.",
+                    "B. Giới thiệu giá trị của cổ vật.",
+                    "C. Trưng bày cổ vật tại gia đình.",
+                    "D. Giữ gìn giá trị của các"
+                ],
+                "a": "D"
+            }
+        ];
+        const part2Data = [
+            {
+                "id": 61,
+                "title": "Câu 61",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Sau khi sinh con được ba tháng, chị K phát hiện chồng mình là anh B đã tự ý rút tiền tiết kiệm của hai vợ chồng để mở rộng cơ sở kinh doanh. Do nhập một số lượng lớn pháo hoa không có nguồn gốc xuất xứ, anh B bị cơ quan chức năng tịch thu và xử phạt nên bị thua lỗ nặng. Để có tiền trả nợ, chị K nhờ mẹ chồng là bà H trông con để chị đi làm thêm dù anh B không đồng ý. Vốn có trình độ và năng lực, chị K được nhận làm thư ký cho ông Q giám đốc một doanh nghiệp gần nhà. Thấy chị K xinh đẹp lại là thư ký riêng, do trước đây đã nhiều lần phát hiện ông Q quan hệ với một số cô gái khác nhằm có con trai nối dõi tông đường, bà P vợ ông Q đã gây sức ép buộc chồng phải đuổi việc chị K. Do ông Q trì hoãn thanh toán tiền lương cho chị K theo thỏa thuận, chị K đã cung cấp bằng chứng và làm đơn tố cáo ông Q thường xuyên tổ chức sản xuất hàng giả khiến ông bị cơ quan chức năng xử phạt.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Anh B và chị K cùng vi phạm quyền và nghĩa vụ giữa vợ và chồng trong gia đình.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Ông Q và anh B vi phạm quyền và nghĩa vụ của công dân trong kinh doanh và trong gia đình.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Bà P vi phạm quyền và nghĩa vụ giữa vợ và chồng trong quan hệ gia đình.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Anh B đã vi phạm quyền và nghĩa vụ của công dân về sở hữu tài sản.",
+                        "explanation": "",
+                        "ans": true
+                    }
+                ]
+            },
+            {
+                "id": 62,
+                "title": "Câu 62",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Bà M có con gái là chị H sống cùng vợ chồng con trai là anh A và chị B. Nghi ngờ anh A tham gia đánh bạc trực tuyến, chị B bí mật rút tiền tiết kiệm của hai vợ chồng rồi nhờ mẹ đẻ chị là bà Q giữ hộ. Vốn coi thường anh A không có thu nhập ổn định nên bà Q đã khuyên con gái góp vốn cùng bà kinh doanh nhu yếu phẩm và được chị B đồng ý. Biết chuyện, chị H bịa đặt và đưa thông tin sai lệch về chị B lên mạng xã hội đồng thời cùng bà M đến nhà bà Q vu khống bà Q lừa đảo chiếm đoạt tài sản của vợ chồng anh A nên giữa hai bà xảy ra xô xát.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Bà Q và chị B vi phạm quyền và nghĩa vụ của vợ và chồng trong quan hệ tài sản.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Bà Q và chị B chưa thực hiện tốt nghĩa vụ tôn trọng tài sản của công dân.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Chị H vi phạm quyền và nghĩa vụ giữa các thành viên trong gia đình.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Bà M và bà Q cùng vi phạm quyền và nghĩa vụ giữa các thành viên trong gia đình.",
+                        "explanation": "",
+                        "ans": false
+                    }
+                ]
+            },
+            {
+                "id": 63,
+                "title": "Câu 63",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>Gần đây, Trường Đại học C tổ chức kì thi kết thúc học phần nhưng do không nắm vững kiến thức các môn học nên M (sinh viên Trường Đại học C) quyết định tìm người thi hộ. Thông qua mạng xã hội, M thuê B (sinh viên một trường đại học khác trên địa bàn) thi hộ hai môn chuyên ngành với giá 600.000 đồng/môn. Tuy nhiên, khi B đang sử dụng giấy tờ giả để tham dự kì thi hộ M thì đã bị giám thị phát hiện. Sau đó các cơ quan chức năng đã tiến hành xử lý hành vi vi phạm của cả M và B bằng hình thức đuổi học.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Sinh viên M đã vi phạm quyền học tập của sinh viên B.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Bạn M và B đều được học tập tại các trường đại học là thực hiện quyền học tập của công dân.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Việc cơ quan chức năng tiến hành đuổi học bạn M và bạn B là vi phạm quyền học tập của công dân.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Việc bạn M và bạn B khiếu nại quyết định kỷ luật đối với mình là không phù hợp vì hành vi của 2 người là cụ thể.",
+                        "explanation": "",
+                        "ans": false
+                    }
+                ]
+            },
+            {
+                "id": 64,
+                "title": "Câu 64",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>Trước đây, điều kiện gia đình khó khăn nên ông Đ phải nghỉ học giữa chừng để kiếm tiền phụ giúp bố mẹ. Mỗi khi nhìn bạn bè theo đuổi con đường học tập, ông luôn cảm thấy tiếc nuối. Khi lập gia đình và có con, ông Đ đặt hết mọi kì vọng của bản thân lên các con của mình. Vì vậy, ông luôn cố gắng tạo điều kiện về kinh tế để các con yên tâm học tập nhưng lại luôn so sánh, tạo sức ép, bắt các con phải tập trung học tập, ngăn cấm các con tham gia những hoạt động văn hoá, văn nghệ, thể dục thể thao và những hoạt động xã hội khác. Gần đây, khi nhận tin con trai cả không thi đỗ vào trường chuyên của tỉnh, ông Đ vô cùng tức giận. Ông dùng nhiều lời lẽ tiêu cực để so sánh con với các bạn học khác và tuyên bố không cho con đi học.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Ông Đ bị xâm phạm đến quyền học tập của công dân.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Các con của ông Đ đã được thực hiện tốt quyền học tập của mình.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Việc cấm các con không được tham gia các hoạt động văn hóa, văn nghệ để học tập là phù hợp với quyền và nghĩa vụ giữa cha mẹ và con.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Việc dùng lời lẽ tiêu cực và so sánh kết quả học tập của con mình với các bạn khác của ông Đ là hành vi xâm phạm đến quyền của công dân trong gia đình và trong học tập.",
+                        "explanation": "",
+                        "ans": true
+                    }
+                ]
+            },
+            {
+                "id": 65,
+                "title": "Câu 65",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>S là sinh viên năm thứ nhất của một trường đại học. Sau khi tìm hiểu các quy định của trường, S đã quyết định đăng kí thêm các môn học khác so với chương trình tiêu chuẩn mỗi học kì. S nhận thấy các môn có sự liên kết nhất định với nhau và nếu tích luỹ đủ các tín chỉ theo chương trình đào tạo có thể ra trường sớm hơn so với các bạn. Biết được ý định của con, bố mẹ đã ra sức phản đối không cho S đăng kí học vượt với lí do không phù hợp với trình độ nhận thức nhưng S vẫn làm hồ sơ đăng ký học thêm và được chấp nhận. Tuy nhiên do không sắp xếp được giữa việc học và đi làm thêm nên sau một năm đăng ký học thêm, S không đủ điều kiện được học tiếp.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Sinh viên S đã được thực hiện quyền học tập của mình một cách phù hợp.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Việc phản đối của bố mẹ S là vi phạm quyền học tập của công dân. Đúng, vì việc học tập và đăng ký học tiếp do S tự quyết định có thể tham khảo ý kiến của bố mẹ nếu cảm thấy phù hợp.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Việc không đủ điều kiện được học tiếp các của sinh viên S không vi phạm nghĩa vụ học tập của công dân.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Sinh viên S có quyền được khiếu nại để nhà trường xem xét lại quyết định không cho học tiếp đối với bản thân mình. sinh xã hội",
+                        "explanation": "",
+                        "ans": false
+                    }
+                ]
+            },
+            {
+                "id": 66,
+                "title": "Câu 66",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>Khi bị ngất xỉu, chị P đã được gia đình đưa vào bệnh viện để khám bệnh. Trong quá trình trao đổi với bác sĩ M, chị P đã không kể chi tiết về những biểu hiện của cơ thể để không phải nhập viện. Nhưng với kinh nghiệm chuyên môn và qua khám ban đầu, bác sĩ M đã yêu cầu chị P đi chụp chiếu và làm một số xét nghiệm để xác định rõ tình trạng bệnh tim. Nhưng chị P lại không đồng ý với lí do sức khoẻ của mình vẫn tốt và yêu cầu người nhà đưa chị về.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Chị P che giấu tình trạng sức khỏe của bản thân là phù hợp với quyền của công dân trong khám chữa bệnh.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Việc yêu cầu chị P đi chụp chiếu và làm xét nghiệm là không cần thiết.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Chị P và bác sĩ M đều chưa thực hiện đúng nghĩa vụ của công dân trong bảo vệ và chăm sóc sức khỏe.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Bác sĩ M thực hiện đúng các quy định của pháp luật về bảo vệ và chăm sóc sức khỏe công dân.",
+                        "explanation": "",
+                        "ans": true
+                    }
+                ]
+            },
+            {
+                "id": 67,
+                "title": "Câu 67",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>Sau khi kết thúc 2 tháng thử việc, ông V liên tục đưa ra nhiều lí do khác nhau để trì hoãn việc kí hợp đồng và đóng bảo hiểm y tế, bảo hiểm xã hội cho người lao động theo quy định của pháp luật. Đồng thời, ông V cũng không đầu tư trang bị bảo hộ lao động cho các công nhân làm việc trong xưởng sản xuất để đảm bảo an toàn và sức khoẻ cho họ.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Ông V vừa vi phạm quyền và nghĩa vụ của công dân trong bảo vệ, chăm sóc sức khỏe và đảm bảo an sinh xã hội.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Người lao động trong công ty của ông V có quyền khiếu nại tới cơ quan chức năng để yêu cầu ông V bồi thường thiệt hại.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Ông V chuyển trực tiếp số tiền phải đóng bảo hiểm xã hội cho người lao động cho người lao động tự đóng là phù hợp với quy định của pháp luật.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Ông V chưa thực hiện đúng trách nhiệm pháp lý và trách nhiệm từ thiện của doanh nghiệp.",
+                        "explanation": "",
+                        "ans": true
+                    }
+                ]
+            },
+            {
+                "id": 68,
+                "title": "Câu 68",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>Vừa qua, trên địa bàn xã A thuộc huyện K xảy ra lũ ống, lũ quét gây ảnh hưởng nghiêm trọng đến sức khoẻ và tài sản của người dân nên chính quyền huyện K đã quyết định trích một phần ngân sách để hỗ trợ cho người dân khắc phục khó khăn, ổn định lại cuộc sống, số tiền hỗ trợ sẽ được phân bổ theo mức độ thiệt hại của từng hộ gia đình. Khi kê khai thiệt hại về tài sản, gia đình bà M đã cố tình kê khai mức thiệt hại lớn hơn so với thực tế để trục lợi. Việc làm của gia đình bà M bị ông H (cán bộ xã A) phát hiện nhưng do có mối quan hệ họ hàng với bà M nên ông H im lặng bỏ qua.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Quyết định trích ngân sách để hỗ trợ các gia đình bị thiệt hại của xã A là góp phần thực hiện quyền được đảm bảo an sinh xã hội của người dân.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Bà M đã được thực hiện quyền của công dân trong việc đảm bảo an sinh xã hội.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Ông H và bà M đều chưa thực hiện đúng nghĩa vụ của công dân trong việc đảm bảo an sinh xã hội.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Việc làm của ông H và bà M gây ra hậu quả mất công bằng trong việc thực hiện chính sách an sinh xã hội của nhà nước. nguyên thiên nhiên",
+                        "explanation": "",
+                        "ans": true
+                    }
+                ]
+            },
+            {
+                "id": 69,
+                "title": "Câu 69",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>Các di sản văn hoá đã được đặt dưới sự bảo hộ của Luật Di sản văn hoá và các công ước của UNESCO mà Việt Nam đã tham gia. Trong số gần 4 triệu hiện vật đang lưu giữ trong các bảo tàng công lập, bảo tàng ngoài công lập và các bộ , tập tư nhân có 238 hiện vật và nhóm hiện vật được Thủ tướng Chính phủ công nhận là bảo vật quốc gia. Từ năm 2015 – 2022, đã có 131 nghệ nhân được phong tặng danh hiệu Nghệ nhân nhân dân và 1 507 nghệ nhân được phong tặng danh hiệu Nghệ nhân ưu tú. Luật Di sản văn hoá cho phép tư nhân/chủ sở hữu sưu tập hiện vật xây dựng bảo tàng ngoài công lập, tư nhân hiến tặng cổ vật cho các bảo tàng công lập. Nhà nước đã đầu tư những khoản ngân sách khá lớn cho mục tiêu bảo tồn di sản văn hoá. Ngoài ra, phải kể tới hàng nghìn tỉ đồng được huy động từ sự tự nguyện đóng góp của cộng đồng cư dân các địa phương cũng như vốn hỗ trợ từ UNESCO.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Quyền của công dân về bảo vệ di sản văn hoá thể hiện ở việc 238 hiện vật và nhóm hiện vật được Thủ tướng Chính phủ công nhận là bảo vật quốc gia.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Việc phong tặng danh hiệu Nghệ nhân nhân dân và danh hiệu Nghệ nhân ưu tủ nằm ngoài lĩnh vực về bảo vệ di sản văn hoá.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Pháp luật cho phép tư nhân sưu tập hiện vật xây dựng bảo tàng ngoài công lập là để tạo cơ hội cho người dân được tiếp cận và hưởng thụ các giá trị di sản văn hoá.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Pháp luật quy định cộng đồng cư dân các địa phương có nghĩa vụ tự nguyện đóng góp hàng nghìn tỉ đồng cho mục tiêu bảo tồn di sản văn hoá.",
+                        "explanation": "",
+                        "ans": false
+                    }
+                ]
+            },
+            {
+                "id": 70,
+                "title": "Câu 70",
+                "text": "Trong những năm qua, nhà sưu tầm cổ vật N đã sưu tầm được hàng ngàn cổ vật, trong đó có nhiều cổ vật quý hiếm, có giá trị lớn về văn hoá, lịch sử. Phần lớn các cổ vật này được ông lựa chọn để trao tặng cho các bảo tàng, trường đại học để phục vụ trưng bày và giảng dạy. Số còn lại được ông trưng bày tại nhà hàng của mình ở một địa điểm du lịch để phục vụ du khách tham quan miễn phí.<br>Đọc đoạn thông tin sau:<br>Năm 2021, Chùa Đậu – di tích lịch sử được mệnh danh là “Danh lam đệ nhất. trời Nam\" bỗng nhiên bị làm mới. Công trình hàng nghìn năm tuổi với nhiều hạng mục được xây thêm, làm mới khiến nhiều người chua xót: Chùa Đậu giờ chỉ còn 1 năm tuổi, nhưng có người lại cho rằng, chỉ vài năm nữa, rêu xanh sẽ mọc lên vì các hạng mục được xây mới, sửa chữa sẽ lại nhuốm màu cổ kính như xưa. Cả chuyện của Chùa Đậu được làm mới vốn không mới, nhưng lại xảy ra thưởng xuyên tại hầu hết các địa phương trong cả nước.",
+                "items": [
+                    {
+                        "id": "a",
+                        "text": "a) Với việc làm mới, Chùa Đậu chỉ mất đi vẻ cổ kính, nhưng thực tế vẫn được lịch sử hàng nghìn năm.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "b",
+                        "text": "b) Công dân thực hiện quyền và nghĩa vụ bảo vệ di sản văn hoá bằng cách tranh cãi về việc nên/không nên làm mới các di tích lịch sử.",
+                        "explanation": "",
+                        "ans": false
+                    },
+                    {
+                        "id": "c",
+                        "text": "c) Nhiều hạng mục được xây thêm và làm mới khiến Chùa Đậu mất đi vẻ cổ kinh là dấu hiệu công dân lạm dụng quyền về bảo vệ di sản văn hoá.",
+                        "explanation": "",
+                        "ans": true
+                    },
+                    {
+                        "id": "d",
+                        "text": "d) Xử lí hành vi làm mới ở di tích lịch sử Chùa Đậu sẽ ngăn chặn được hiện tượng này ở hầu hết các địa phương khác.",
+                        "explanation": "",
+                        "ans": true
+                    }
+                ]
+            }
+        ];
+
+
+        // DOM Elements
+        const questionsPart1 = document.getElementById('questions-part1');
+        const questionsPart2 = document.getElementById('questions-part2');
+        const scorePart1 = document.getElementById('score-part1');
+        const totalPart1 = document.getElementById('total-part1');
+        const progressPart1 = document.getElementById('progress-part1');
+        const scorePart2 = document.getElementById('score-part2');
+        const totalPart2 = document.getElementById('total-part2');
+        const progressPart2 = document.getElementById('progress-part2');
+
+        // State
+        let state = {
+            part1: { correct: 0, total: 0, answered: 0 },
+            part2: { score: 0, total: 0, answered: 0 }
+        };
+
+        // Assets
+        const assets = {
+            goodImgs: ['Good1.png', 'Good2.png', 'Good3.png', 'Good4.png', 'good36.jpg'],
+            wrongImgs: ['Wrong1.png', 'Wrong2.png', 'Wrong3.png', 'Wrong4.png', 'Wrong5.png', 'Wrong6.png'],
+            goodSfx: ['Good.mp3'], // Generic good sound
+            wrongSfx: ['Wrong1.mp3', 'Wrong2.mp3']
+        };
+
+        function playRandomSfx(isCorrect) {
+            const list = isCorrect ? assets.goodSfx : assets.wrongSfx;
+            const rand = list[Math.floor(Math.random() * list.length)];
+            const audio = new Audio(`sfx/${rand}`);
+            audio.play().catch(e => console.log('Audio play failed:', e));
+        }
+
+        function showFeedbackImage(isCorrect) {
+            const list = isCorrect ? assets.goodImgs : assets.wrongImgs;
+            const rand = list[Math.floor(Math.random() * list.length)];
+            const overlay = document.getElementById('feedback-overlay');
+            const img = document.getElementById('feedback-img');
+
+            img.src = `pics/${rand}`;
+            overlay.className = 'feedback-overlay active';
+            img.className = 'feedback-img show'; // Triggers animation
+
+            // Hide after 0.36s (animation duration)
+            setTimeout(() => {
+                overlay.className = 'feedback-overlay';
+                img.className = 'feedback-img';
+            }, 360);
+        }
+
+        function showFinished() {
+            const overlay = document.getElementById('feedback-overlay');
+            const img = document.getElementById('feedback-img');
+
+            img.src = `pics/Finished.png`;
+            overlay.className = 'feedback-overlay active finished';
+            // img.className = 'feedback-img show'; // No fade out animation for finished, just show
+
+            const audio = new Audio(`sfx/Good.mp3`);
+            audio.play().catch(e => console.log('Audio play failed:', e));
+
+            setTimeout(() => {
+                overlay.classList.remove('active', 'finished');
+            }, 3000);
+        }
+
+        function checkCompletion() {
+            // Check if total answered equals total questions
+            // Note: part1.total is number of questions. part2.total is number of TF items.
+            // part1.answered and part2.answered are counts of user answers.
+            if (state.part1.answered === state.part1.total && state.part2.answered === state.part2.total) {
+                setTimeout(showFinished, 500); // Small delay after last answer feedback
+            }
+        }
+
+        function init() {
+            // Setup Part 1
+            if (typeof part1Data !== 'undefined' && part1Data.length > 0) {
+                state.part1.total = part1Data.length;
+                renderPart1();
+            } else {
+                questionsPart1.innerHTML = "<p style='text-align:center'>Đang tải dữ liệu câu hỏi...</p>";
+            }
+
+            // Setup Part 2
+            if (typeof part2Data !== 'undefined' && part2Data.length > 0) {
+                let p2Total = 0;
+                part2Data.forEach(q => p2Total += q.items.length);
+                state.part2.total = p2Total;
+                renderPart2();
+            } else {
+                questionsPart2.innerHTML = "<p style='text-align:center'>Đang tải dữ liệu câu hỏi...</p>";
+            }
+
+            updateUI();
+        }
+
+        function updateUI() {
+            scorePart1.textContent = state.part1.correct;
+            totalPart1.textContent = state.part1.total;
+            progressPart1.style.width = state.part1.total ? `${(state.part1.answered / state.part1.total) * 100}%` : '0%';
+
+            scorePart2.textContent = state.part2.score;
+            totalPart2.textContent = state.part2.total;
+            progressPart2.style.width = state.part2.total ? `${(state.part2.answered / state.part2.total) * 100}%` : '0%';
+        }
+
+        window.openTab = function (tabName) {
+            const contents = document.getElementsByClassName('tab-content');
+            const btns = document.getElementsByClassName('tab-btn');
+            for (let c of contents) c.classList.remove('active');
+            for (let b of btns) b.classList.remove('active');
+            document.getElementById(tabName).classList.add('active');
+            const activeBtn = Array.from(btns).find(b => b.onclick.toString().includes(tabName));
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+
+        function renderPart1() {
+            questionsPart1.innerHTML = part1Data.map((q, index) => `
+        <div class="question-card" id="q1-${q.id}">
+            <div class="question-text">Câu ${q.id}. ${q.q}</div>
+            <div class="options-grid">
+                ${q.opts.map((opt, i) => {
+                const letter = String.fromCharCode(65 + i);
+                return `<button class="option-btn" onclick="checkPart1(${q.id}, '${letter}', this)">${opt}</button>`;
+            }).join('')}
+            </div>
+        </div>
+    `).join('');
+        }
+
+        window.checkPart1 = function (id, selected, btn) {
+            const q = part1Data.find(x => x.id === id);
+            const parent = btn.parentElement;
+            if (parent.dataset.answered) return;
+            parent.dataset.answered = "true";
+
+            const buttons = parent.getElementsByClassName('option-btn');
+            const correctBtnIndex = q.a.charCodeAt(0) - 65;
+
+            if (selected === q.a) {
+                btn.classList.add('correct');
+                state.part1.correct++;
+                showToast("Chính xác!", "success");
+                playRandomSfx(true);
+                showFeedbackImage(true);
+            } else {
+                btn.classList.add('incorrect');
+                if (buttons[correctBtnIndex]) buttons[correctBtnIndex].classList.add('correct');
+                showToast(`Sai rồi. Đáp án đúng là ${q.a}`, "error");
+                playRandomSfx(false);
+                showFeedbackImage(false);
+            }
+            state.part1.answered++;
+            updateUI();
+            checkCompletion();
+        }
+
+        function renderPart2() {
+            questionsPart2.innerHTML = part2Data.map(q => `
+        <div class="question-card">
+            <div class="question-text"><strong>${q.title}</strong></div>
+            <p>${q.text}</p>
+            <div class="tf-container">
+                ${q.items.map(item => `
+                    <div class="tf-row" id="p2-item-${q.id}-${item.id}" data-ans="${item.ans}">
+                        <div class="tf-statement">${item.text}</div>
+                        <div class="tf-options">
+                            <button class="tf-btn" onclick="checkPart2('${q.id}', '${item.id}', true, this)">Đúng</button>
+                            <button class="tf-btn" onclick="checkPart2('${q.id}', '${item.id}', false, this)">Sai</button>
+                        </div>
+                        <div class="tf-result"></div>
+                    </div>
+                    <div class="tf-expl" id="expl-${q.id}-${item.id}" style="display:none; margin-left:10px; font-size:0.9em; color:#666;">
+                        ${item.explanation ? `<em>Giải thích: ${item.explanation}</em>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+        }
+
+        window.checkPart2 = function (qId, itemId, userAns, btn) {
+            const q = part2Data.find(x => x.id == qId);
+            const item = q.items.find(x => x.id == itemId);
+            const row = document.getElementById(`p2-item-${qId}-${itemId}`);
+
+            if (row.dataset.answered) return;
+            row.dataset.answered = "true";
+
+            const btns = row.getElementsByClassName('tf-btn');
+            if (userAns) btn.classList.add('selected-true');
+            else btn.classList.add('selected-false');
+
+            const resultDiv = row.querySelector('.tf-result');
+            const explDiv = document.getElementById(`expl-${qId}-${itemId}`);
+
+            if (userAns === item.ans) {
+                state.part2.score++;
+                resultDiv.innerHTML = '<span class="correct-text">✓</span>';
+                btn.style.borderColor = 'var(--primary-light)';
+                btn.style.borderWidth = '2px';
+                playRandomSfx(true);
+                showFeedbackImage(true);
+            } else {
+                resultDiv.innerHTML = '<span class="wrong-text">✕</span>';
+                const otherBtn = userAns ? btns[1] : btns[0];
+                otherBtn.style.border = '2px solid var(--primary-light)';
+                otherBtn.style.color = 'var(--primary-dark)';
+                otherBtn.style.fontWeight = 'bold';
+                playRandomSfx(false);
+                showFeedbackImage(false);
+            }
+
+            if (explDiv) explDiv.style.display = 'block';
+
+            state.part2.answered++;
+            updateUI();
+            checkCompletion();
+        }
+
+        function showToast(message, type) {
+            const x = document.getElementById("toast");
+            x.innerText = message;
+            x.className = "toast show";
+            setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        // Initialize after data load (simulated)
+        // setTimeout(init, 100);
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+
+</html>
